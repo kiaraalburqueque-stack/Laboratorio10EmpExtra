@@ -32,8 +32,8 @@ export default function Inbox({ plans }) {
   //   · decided: los planes cuyo id SÍ está en decisions.
   //   · visible: los pendientes cuyo `op` o cuyo targetLabel(plan.target) contiene `query`
   //     (sin distinguir mayúsculas ni espacios al borde). Con query vacío, todos los pendientes.
-  const pending = plans;
-  const decided = [];
+  const pending = plans.filter((plan) => !(plan.id in decisions));
+  const decided = plans.filter((plan) => plan.id in decisions);
   const visible = pending;
 
   // TODO 4 — clearSearch(): vacía la búsqueda.

@@ -1,14 +1,12 @@
-import { useState } from "react";
 import Button from "./Button";
 import HashConfirm from "./HashConfirm";
-import { VERDICT_LABELS } from "../lib/plans";
 
 export default function PlanCard({ plan, onDecide }) {
-  const [verdict, setVerdict] = useState(null);
   const isDestructive = plan.risk === "R2";
 
+  // The card keeps no copy of the verdict: it only tells the parent (Inbox),
+  // which owns `decisions` and moves the plan to "Decididos".
   function handleDecision(value) {
-    setVerdict(value);
     onDecide(plan.id, value);
   }
 
@@ -38,22 +36,18 @@ export default function PlanCard({ plan, onDecide }) {
         </dd>
       </dl>
 
-      {verdict ? (
-        <p className="plan-card-verdict">Decidido: {VERDICT_LABELS[verdict]}</p>
-      ) : (
-        <div className="plan-card-actions">
-          {isDestructive ? (
-            <HashConfirm hash={plan.plan_hash} onConfirm={() => handleDecision("approved")} />
-          ) : (
-            <Button variant="primary" onClick={() => handleDecision("approved")}>
-              Aprobar
-            </Button>
-          )}
-          <Button variant="ghost" onClick={() => handleDecision("rejected")}>
-            Rechazar
+      <div className="plan-card-actions">
+        {isDestructive ? (
+          <HashConfirm hash={plan.plan_hash} onConfirm={() => handleDecision("approved")} />
+        ) : (
+          <Button variant="primary" onClick={() => handleDecision("approved")}>
+            Aprobar
           </Button>
-        </div>
-      )}
+        )}
+        <Button variant="ghost" onClick={() => handleDecision("rejected")}>
+          Rechazar
+        </Button>
+      </div>
     </article>
   );
 }

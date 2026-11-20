@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PlanCard from "./PlanCard";
 import { targetLabel, VERDICT_LABELS } from "../lib/plans";
 import { readStoredDecisions, writeStoredDecisions } from "../lib/storage";
@@ -7,11 +7,15 @@ export default function Inbox({ plans }) {
   const [decisions, setDecisions] = useState(() => readStoredDecisions());
   const [query, setQuery] = useState("");
 
+  // A new object each time: React only re-renders when the reference changes.
   const decide = (id, verdict) => {
-    decisions[id] = verdict;
-    setDecisions(decisions);
-    writeStoredDecisions(decisions);
+    setDecisions((current) => ({ ...current, [id]: verdict }));
   };
+
+  // Saved after every change, from the new object.
+  useEffect(() => {
+    writeStoredDecisions(decisions);
+  }, [decisions]);
 
   const clearSearch = () => setQuery("");
 

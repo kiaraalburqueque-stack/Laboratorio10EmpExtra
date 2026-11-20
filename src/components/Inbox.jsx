@@ -16,13 +16,16 @@ export default function Inbox({ plans }) {
   //   · decisions: empieza con lo que haya guardado (inicialización perezosa: useState(readStoredDecisions),
   //     pasando la FUNCIÓN, sin llamarla).
   //   · query: empieza en "".
-  const [decisions, setDecisions] = [{}, () => {}];
-  const [query, setQuery] = ["", () => {}];
+  const [decisions, setDecisions] = useState(readStoredDecisions);
+  const [query, setQuery] = useState("");
 
   // TODO 2 — decide(id, verdict): anota la decisión SIN modificar el objeto actual.
   //   Crea un objeto nuevo con la decisión añadida ({ ...current, [id]: verdict }) y pásalo a setDecisions.
   //   Usa la forma funcional: setDecisions((current) => ...).
-  function decide(id, verdict) {}
+  function decide(id, verdict) {
+    // A NEW object: React compares the old and new references to know it must re-render.
+    setDecisions((current) => ({ ...current, [id]: verdict }));
+  }
 
   // TODO 3 — Derivados. Calcúlalos a partir de plans, decisions y query; NO los guardes en estado.
   //   · pending: los planes cuyo id NO está en decisions.

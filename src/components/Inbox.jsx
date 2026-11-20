@@ -34,10 +34,15 @@ export default function Inbox({ plans }) {
   //     (sin distinguir mayúsculas ni espacios al borde). Con query vacío, todos los pendientes.
   const pending = plans.filter((plan) => !(plan.id in decisions));
   const decided = plans.filter((plan) => plan.id in decisions);
-  const visible = pending;
+  const needle = query.trim().toLowerCase();
+  const visible = pending.filter(
+    (plan) => plan.op.toLowerCase().includes(needle) || targetLabel(plan.target).toLowerCase().includes(needle)
+  );
 
   // TODO 4 — clearSearch(): vacía la búsqueda.
-  function clearSearch() {}
+  function clearSearch() {
+    setQuery("");
+  }
 
   // TODO 5 — Persistencia. Cada vez que cambie `decisions`, guárdalas con writeStoredDecisions(decisions)
   //   dentro de un useEffect con la dependencia correcta.
